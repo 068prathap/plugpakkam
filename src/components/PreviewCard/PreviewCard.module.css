@@ -1,0 +1,76 @@
+.card {
+  position: relative;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--line);
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #f1f4f2;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.kindShared,
+.kindStation {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green);
+}
+
+.kindStation {
+  color: var(--ink);
+}
+
+.card h2 {
+  margin-top: 2px;
+  padding-right: 40px;
+  font-size: 19px;
+}
+
+.meta {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.actions {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.actions a {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.primary {
+  background: var(--green);
+  color: var(--white);
+}
+
+.secondary {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}

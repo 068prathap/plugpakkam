@@ -1,0 +1,65 @@
+.report summary {
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form fieldset {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form legend {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form input[type='radio'] {
+  accent-color: var(--green);
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.note textarea {
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-weight: 400;
+}
+
+.form button {
+  align-self: flex-start;
+  padding: 10px 18px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.thanks {
+  color: var(--green-dark);
+  font-weight: 600;
+}

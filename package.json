@@ -1,0 +1,28 @@
+{
+  "name": "plugpakkam",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "node --env-file=.env.local scripts/seed.mjs",
+    "create-admin": "node --env-file=.env.local scripts/create-admin.mjs",
+    "import-stations": "node --env-file=.env.local scripts/import-stations.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.13",
+    "leaflet": "^1.9.4",
+    "mongoose": "^9.11.2",
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2"
+  }
+}

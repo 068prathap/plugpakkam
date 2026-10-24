@@ -1,0 +1,25 @@
+.mapBox {
+  position: relative;
+}
+
+.mapLoading {
+  height: 300px;
+  border-radius: var(--radius-sm);
+  background: #e9ece8;
+}
+
+.locate {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 500;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--green-dark);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}

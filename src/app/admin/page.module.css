@@ -1,0 +1,138 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+.page h1 {
+  font-size: 26px;
+  color: var(--green-dark);
+}
+
+.page h2 {
+  margin-top: 32px;
+  font-size: 20px;
+}
+
+.stats {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stats p {
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.empty {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.list {
+  list-style: none;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.card a {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.note {
+  font-style: italic;
+}
+
+.photos {
+  display: flex;
+  gap: 6px;
+}
+
+.photo {
+  position: relative;
+  width: 96px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.photo img {
+  object-fit: cover;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions .approve {
+  border-color: var(--green);
+  background: var(--green);
+  color: var(--white);
+}
+
+.actions .reject {
+  color: var(--red);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topLinks {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.topLinks a {
+  color: var(--green);
+}
+
+.topLinks button {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
