@@ -7,7 +7,12 @@ export async function GET(request) {
   const q = searchParams.get('q');
   const towns = searchPlaces(q, 6);
   const [spots, others] = await Promise.all([searchListings(q).catch(() => []), searchOtherPlaces(q)]);
-  const extra = others.filter((other) => !towns.some((town) => town.name === other.name && metersBetween(town, other) < 3000));
+  const stem = (name) => name.toLowerCase().replace(/[^a-z]/g, '').slice(0, 7);
+  const extra = others.filter(
+    (other, index) =>
+      !towns.some((town) => stem(town.name) === stem(other.name) && metersBetween(town, other) < 15000) &&
+      others.findIndex((item) => item.name === other.name) === index
+  );
 
   return Response.json({ spots, towns, others: extra.slice(0, 4) });
 }

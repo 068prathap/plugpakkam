@@ -207,13 +207,6 @@ function Finder({ t, lang }) {
     if (id) setSheet('peek');
   }, []);
 
-  function selectAndShow(listing) {
-    setSelectedId(listing.id);
-    setSheet('peek');
-    const zoom = Math.max(view?.zoom || 15, 15);
-    setFocus({ center: listing, zoom, offsetY: isWide() ? 0 : 90 });
-  }
-
   function pickPlace(place) {
     setOrigin(place);
     setSelectedId(null);
@@ -287,11 +280,18 @@ function Finder({ t, lang }) {
             <div className={styles.segment} role="group" aria-label={t.finder.all}>
               {[
                 ['', t.finder.all],
-                ['shared', t.finder.shared],
+                ['shared', t.finder.shared, t.finder.sharedShort],
                 ['station', t.finder.stations],
-              ].map(([value, label]) => (
+              ].map(([value, label, shortLabel]) => (
                 <button key={value || 'all'} type="button" aria-pressed={filters.kind === value} onClick={() => updateFilter('kind', value)}>
-                  {label}
+                  {shortLabel ? (
+                    <>
+                      <span className={styles.long}>{label}</span>
+                      <span className={styles.short}>{shortLabel}</span>
+                    </>
+                  ) : (
+                    label
+                  )}
                 </button>
               ))}
             </div>
@@ -318,7 +318,7 @@ function Finder({ t, lang }) {
             <ul>
               {visible.slice(0, 60).map((listing) => (
                 <li key={listing.id}>
-                  <ListingCard listing={listing} t={t} selected={listing.id === selectedId} onSelect={() => selectAndShow(listing)} onHover={setHoveredId} />
+                  <ListingCard listing={listing} t={t} selected={listing.id === selectedId} onSelect={() => select(listing.id)} onHover={setHoveredId} />
                 </li>
               ))}
             </ul>
