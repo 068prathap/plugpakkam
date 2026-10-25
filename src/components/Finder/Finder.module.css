@@ -74,6 +74,10 @@
   transition: background 0.15s, color 0.15s;
 }
 
+.segment button:focus-visible {
+  outline-offset: -2px;
+}
+
 .segment button[aria-pressed='true'] {
   background: var(--ink);
   color: var(--white);
@@ -259,6 +263,23 @@
   }
 }
 
+.toast {
+  position: absolute;
+  top: calc(var(--sheet-top) + 10px);
+  left: 12px;
+  right: 68px;
+  z-index: 1003;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  box-shadow: var(--shadow-lg);
+  animation: rise 0.22s ease-out;
+}
+
 .preview {
   position: absolute;
   left: 10px;
@@ -378,6 +399,13 @@
   .locate {
     top: 20px;
     right: 20px;
+  }
+
+  .toast {
+    top: 20px;
+    left: 24px;
+    right: auto;
+    max-width: 420px;
   }
 
   .preview {

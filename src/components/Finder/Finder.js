@@ -83,6 +83,7 @@ function Finder({ t, lang }) {
   const [origin, setOrigin] = useState(saved?.origin || null);
   const [locating, setLocating] = useState(!saved);
   const [locationOff, setLocationOff] = useState(false);
+  const [toast, setToast] = useState('');
   const [focus, setFocus] = useState(null);
   const [view, setView] = useState(null);
   const [queryBox, setQueryBox] = useState(null);
@@ -122,20 +123,35 @@ function Finder({ t, lang }) {
     }
   }, []);
 
-  const locateMe = useCallback(async () => {
-    setLocating(true);
-    try {
-      const point = await getPosition();
-      setMe(point);
-      setOrigin(null);
-      setSelectedId(null);
-      setLocationOff(false);
-      await focusNearest(point);
-    } catch {
-      setLocationOff(true);
-    }
-    setLocating(false);
-  }, [focusNearest]);
+  const locateMe = useCallback(
+    async (fromButton) => {
+      setLocating(true);
+      setToast('');
+      try {
+        const point = await getPosition();
+        setMe(point);
+        setOrigin(null);
+        setSelectedId(null);
+        setLocationOff(false);
+        await focusNearest(point);
+      } catch (error) {
+        setLocationOff(true);
+        if (fromButton === true) {
+          if (!window.isSecureContext) setToast(t.finder.locationNeedsHttps);
+          else if (error?.code === 1) setToast(t.finder.locationBlocked);
+          else setToast(t.finder.locationFailed);
+        }
+      }
+      setLocating(false);
+    },
+    [focusNearest, t]
+  );
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(''), 6000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   useEffect(() => {
     if (saved) return;
@@ -345,7 +361,7 @@ function Finder({ t, lang }) {
           onViewChange={handleView}
         />
 
-        <button type="button" className={`${styles.locate} ${me && !origin ? styles.locateOn : ''}`} onClick={locateMe} disabled={locating} aria-label={t.finder.useLocation} title={t.finder.useLocation}>
+        <button type="button" className={`${styles.locate} ${me && !origin ? styles.locateOn : ''}`} onClick={() => locateMe(true)} disabled={locating} aria-label={t.finder.useLocation} title={t.finder.useLocation}>
           {locating ? (
             <span className={styles.spinner} />
           ) : (
@@ -354,6 +370,12 @@ function Finder({ t, lang }) {
             </svg>
           )}
         </button>
+
+        {toast && (
+          <p className={styles.toast} role="status">
+            {toast}
+          </p>
+        )}
 
         {selected && (
           <div className={styles.preview}>
