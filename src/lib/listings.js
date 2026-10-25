@@ -94,3 +94,23 @@ export async function getHostListings(hostId) {
   const docs = await Listing.find({ host: hostId }).sort({ createdAt: -1 }).lean();
   return docs.map(toListing);
 }
+
+export async function searchListings(query) {
+  const q = String(query || '').trim();
+  if (q.length < 2) return [];
+
+  await connectDB();
+  const pattern = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  const docs = await Listing.find({ status: 'approved', $or: [{ name: pattern }, { operator: pattern }] }, 'name kind town operator location')
+    .limit(5)
+    .lean();
+
+  return docs.map((doc) => ({
+    id: doc._id.toString(),
+    name: doc.name,
+    kind: doc.kind,
+    area: [doc.kind === 'station' ? doc.operator : '', doc.town].filter(Boolean).join(' · '),
+    lat: doc.location.coordinates[1],
+    lng: doc.location.coordinates[0],
+  }));
+}

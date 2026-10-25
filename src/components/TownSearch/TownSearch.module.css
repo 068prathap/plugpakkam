@@ -9,6 +9,11 @@
   border: 1px solid var(--line);
 }
 
+.compact {
+  height: 48px;
+  border-radius: 14px;
+}
+
 .icon {
   position: absolute;
   left: 16px;
@@ -21,7 +26,7 @@
   height: 100%;
   padding: 0 16px 0 48px;
   border: none;
-  border-radius: 16px;
+  border-radius: inherit;
   background: transparent;
   font-size: 16px;
   font-weight: 500;
@@ -40,24 +45,34 @@
   color: var(--muted);
 }
 
-.search input::-webkit-search-cancel-button {
-  cursor: pointer;
-}
-
 .results {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   right: 0;
   z-index: 1200;
-  list-style: none;
-  max-height: 360px;
+  max-height: min(420px, 60dvh);
   overflow-y: auto;
   padding: 6px;
   border-radius: 16px;
   background: var(--white);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--line);
+}
+
+.group + .group {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.groupLabel {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
 }
 
 .results button {
@@ -83,6 +98,9 @@
 .results b {
   color: var(--ink);
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .results small {
@@ -92,9 +110,12 @@
   text-overflow: ellipsis;
 }
 
+.results .spot {
+  color: var(--green);
+}
+
 .results .active {
   background: var(--green-soft);
-  color: var(--green);
 }
 
 .none {

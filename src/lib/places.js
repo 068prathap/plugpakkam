@@ -30,3 +30,30 @@ export function searchPlaces(query, limit = 8) {
     .slice(0, limit)
     .map(({ place }) => ({ name: place.name, ta: place.ta || '', area: place.area || '', lat: place.lat, lng: place.lng }));
 }
+
+export async function searchOtherPlaces(query) {
+  const q = String(query || '').trim();
+  if (q.length < 3) return [];
+
+  const params = new URLSearchParams({ q, limit: '8', bbox: '76.2,8.05,80.4,13.6', lang: 'en' });
+  try {
+    const response = await fetch(`https://photon.komoot.io/api/?${params}`, {
+      signal: AbortSignal.timeout(2500),
+      headers: { 'User-Agent': 'PlugPakkam (plugpakkam.in)' },
+      next: { revalidate: 86400 },
+    });
+    const data = await response.json();
+
+    return data.features
+      .filter((feature) => feature.properties.state === 'Tamil Nadu' && feature.properties.name)
+      .map(({ properties, geometry }) => ({
+        name: properties.name,
+        area: [properties.street, properties.city || properties.district || properties.county].filter(Boolean).join(', '),
+        lat: geometry.coordinates[1],
+        lng: geometry.coordinates[0],
+      }))
+      .slice(0, 5);
+  } catch {
+    return [];
+  }
+}

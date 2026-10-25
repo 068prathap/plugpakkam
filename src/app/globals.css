@@ -116,3 +116,14 @@ img {
 .leaflet-tile-pane {
   filter: saturate(0.55) contrast(0.92) brightness(1.05);
 }
+
+html[lang='ta'] body {
+  line-height: 1.6;
+}
+
+html[lang='ta'] h1,
+html[lang='ta'] h2,
+html[lang='ta'] h3 {
+  line-height: 1.45;
+  letter-spacing: 0;
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CircleMarker, MapContainer, Marker, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { TAMIL_NADU } from '@/lib/constants';
@@ -16,54 +16,58 @@ function Focus({ focus }) {
   useEffect(() => {
     if (!focus) return;
     const options = { paddingTopLeft: focus.paddingTopLeft, paddingBottomRight: focus.paddingBottomRight, maxZoom: focus.maxZoom || 15 };
-    if (focus.bounds) map.flyToBounds(focus.bounds, { ...options, duration: 0.8 });
-    else if (focus.center) map.flyTo([focus.center.lat, focus.center.lng], focus.zoom || 14, { duration: 0.8 });
+    if (focus.bounds) {
+      map.flyToBounds(focus.bounds, { ...options, duration: 0.8 });
+    } else if (focus.center) {
+      const zoom = focus.zoom || map.getZoom();
+      const target = focus.offsetY ? map.unproject(map.project([focus.center.lat, focus.center.lng], zoom).add([0, focus.offsetY]), zoom) : [focus.center.lat, focus.center.lng];
+      map.flyTo(target, zoom, { duration: 0.6 });
+    }
   }, [map, focus]);
 
   return null;
 }
 
-function Watch({ onBoundsChange, onZoom, onMapClick }) {
+function readView(map) {
+  const bounds = map.getBounds();
+  const center = map.getCenter();
+  return {
+    west: bounds.getWest(),
+    south: bounds.getSouth(),
+    east: bounds.getEast(),
+    north: bounds.getNorth(),
+    center: { lat: center.lat, lng: center.lng },
+    zoom: map.getZoom(),
+  };
+}
+
+function Watch({ onViewChange, onMapClick }) {
   const map = useMapEvents({
     moveend() {
-      report();
-    },
-    zoomend() {
-      onZoom(map.getZoom());
+      onViewChange(readView(map));
     },
     click() {
       onMapClick();
     },
   });
 
-  function report() {
-    const bounds = map.getBounds();
-    onBoundsChange({
-      west: bounds.getWest(),
-      south: bounds.getSouth(),
-      east: bounds.getEast(),
-      north: bounds.getNorth(),
-      center: map.getCenter(),
-    });
-  }
-
   useEffect(() => {
-    const bounds = map.getBounds();
-    onBoundsChange({
-      west: bounds.getWest(),
-      south: bounds.getSouth(),
-      east: bounds.getEast(),
-      north: bounds.getNorth(),
-      center: map.getCenter(),
-    });
-    onZoom(map.getZoom());
-  }, [map, onBoundsChange, onZoom]);
+    onViewChange(readView(map));
+  }, [map, onViewChange]);
 
   return null;
 }
 
-function FinderMap({ listings, focus, me, selectedId, hoveredId, onSelect, onBoundsChange }) {
-  const [zoom, setZoom] = useState(7);
+function FinderMap({ listings, initialView, focus, me, selectedId, hoveredId, onSelect, onViewChange }) {
+  const [zoom, setZoom] = useState(initialView?.zoom || 7);
+  const handleView = useCallback(
+    (view) => {
+      setZoom(view.zoom);
+      onViewChange(view);
+    },
+    [onViewChange]
+  );
+  const clearSelection = useCallback(() => onSelect(null), [onSelect]);
 
   const icons = useMemo(() => {
     const make = (kind, selected) => pinIcon(styles.pin, kind, selected);
@@ -83,14 +87,13 @@ function FinderMap({ listings, focus, me, selectedId, hoveredId, onSelect, onBou
     return icons[active ? `${kind}Selected` : kind];
   }
 
+  const start = initialView ? { center: [initialView.center.lat, initialView.center.lng], zoom: initialView.zoom } : { bounds: TAMIL_NADU.bounds };
+
   return (
-    <MapContainer bounds={TAMIL_NADU.bounds} className={styles.map} zoomControl={false} attributionControl>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+    <MapContainer {...start} className={styles.map} zoomControl={false}>
+      <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Focus focus={focus} />
-      <Watch onBoundsChange={onBoundsChange} onZoom={setZoom} onMapClick={() => onSelect(null)} />
+      <Watch onViewChange={handleView} onMapClick={clearSelection} />
 
       {me && (
         <>
@@ -104,7 +107,7 @@ function FinderMap({ listings, focus, me, selectedId, hoveredId, onSelect, onBou
             <CircleMarker
               key={listing.id}
               center={[listing.lat, listing.lng]}
-              radius={5}
+              radius={listing.id === selectedId ? 8 : 5}
               pathOptions={{ color: '#ffffff', weight: 1.5, fillColor: listing.kind === 'station' ? '#0f1712' : '#0b8a45', fillOpacity: 1 }}
               eventHandlers={{ click: () => onSelect(listing.id) }}
             />

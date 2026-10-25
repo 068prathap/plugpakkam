@@ -74,3 +74,7 @@
   border: 1px solid var(--line);
   color: var(--ink);
 }
+
+:global(html[lang='ta']) .card h2 {
+  line-height: 1.45;
+}
